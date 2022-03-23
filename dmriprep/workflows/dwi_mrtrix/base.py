@@ -197,6 +197,7 @@ def init_dwi_preproc_wf(dwi_file):
     )
     mif_conversion_wf = init_mif_conversion_wf()
     nii_conversion_wf = init_nii_conversion_wf()
+    brainextraction_wf = init_brainextraction_wf()
     workflow.connect(
         [
             (
@@ -223,6 +224,11 @@ def init_dwi_preproc_wf(dwi_file):
                 inputnode,
                 t1w_brain,
                 [("t1w_preproc", "in_file"), ("t1w_mask", "in_mask")],
+            ),
+            (
+                epi_ref_wf,
+                brainextraction_wf,
+                [("outputnode.dwi_reference_nii", "inputnode.in_file")],
             ),
         ]
     )
@@ -291,24 +297,24 @@ def init_dwi_preproc_wf(dwi_file):
         pre_eddy_wf = init_phasediff_wf()
         # workflow.connect([])
         preprocess_wf = init_preprocess_wf()
-        # ds_report_eddy = pe.Node(
-        #     DerivativesDataSink(
-        #         base_directory=str(config.execution.output_dir),
-        #         desc="eddy",
-        #         datatype="figures",
-        #     ),
-        #     name="ds_report_eddy",
-        #     run_without_submitting=True,
-        # )
+        ds_report_eddy = pe.Node(
+            DerivativesDataSink(
+                base_directory=str(config.execution.output_dir),
+                desc="eddy",
+                datatype="figures",
+            ),
+            name="ds_report_eddy",
+            run_without_submitting=True,
+        )
 
-        # eddy_report = pe.Node(
-        #     SimpleBeforeAfter(
-        #         before_label="Distorted",
-        #         after_label="Eddy Corrected",
-        #     ),
-        #     name="eddy_report",
-        #     mem_gb=0.1,
-        # )
+        eddy_report = pe.Node(
+            SimpleBeforeAfter(
+                before_label="Distorted",
+                after_label="Eddy Corrected",
+            ),
+            name="eddy_report",
+            mem_gb=0.1,
+        )
 
         workflow.connect(
             [
@@ -340,6 +346,18 @@ def init_dwi_preproc_wf(dwi_file):
                     epi_ref_wf,
                     [("outputnode.dwi_preproc", "inputnode.dwi_file")],
                 ),
+                (inputnode, ds_report_eddy, [("dwi_file", "source_file")]),
+                (
+                    pre_eddy_wf,
+                    eddy_report,
+                    [("outputnode.dwi_reference", "before")],
+                ),
+                (
+                    epi_ref_wf,
+                    eddy_report,
+                    [("outputnode.dwi_reference_nii", "after")],
+                ),
+                (eddy_report, ds_report_eddy, [("out_report", "in_file")]),
                 (
                     preprocess_wf,
                     apply_transform_wf,
@@ -402,15 +420,25 @@ def init_dwi_preproc_wf(dwi_file):
             (
                 bbr_wf,
                 apply_transform_wf,
-                [("outputnode.epi_to_t1w_aff", "inputnode.epi_to_t1w_aff")],
+                [
+                    ("outputnode.epi_to_t1w_aff", "inputnode.epi_to_t1w_aff"),
+                    ("outputnode.t1w_to_epi_aff", "inputnode.t1w_to_epi_aff"),
+                ],
             ),
             (
                 t1w_brain,
                 apply_transform_wf,
                 [("out_file", "inputnode.t1w_brain")],
             ),
+            (
+                inputnode,
+                apply_transform_wf,
+                [("t1w_mask", "inputnode.t1w_mask")],
+            ),
         ]
     )
+    # coreg_epi_ref_wf = init_epi_ref_wf(name="coreg_dwi_reference_wf")
+    # coreg_epi_ref_wf.name = "coreg_dwi_reference_wf"
     coreg_epi_ref_wf = epi_ref_wf.clone("coreg_dwi_reference_wf")
     workflow.connect(
         [
@@ -504,6 +532,17 @@ def init_dwi_preproc_wf(dwi_file):
                 [
                     ("outputnode.epi_to_t1w_aff", "inputnode.epi_to_t1w_aff"),
                     ("outputnode.t1w_to_epi_aff", "inputnode.t1w_to_epi_aff"),
+                ],
+            ),
+            (
+                apply_transform_wf,
+                ds_preproc_dwi,
+                [
+                    (
+                        "outputnode.native_dwi_mask",
+                        "inputnode.native_dwi_mask",
+                    ),
+                    ("outputnode.coreg_dwi_mask", "inputnode.coreg_dwi_mask"),
                 ],
             ),
         ]
