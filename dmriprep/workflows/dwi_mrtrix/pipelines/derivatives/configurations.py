@@ -71,7 +71,7 @@ NATIVE_DWI_MASK_KWARGS = dict(
     desc="brain",
     space="dwi",
     compress=None,
-    dismiss_entities=["direction"],
+    # dismiss_entities=["direction"],
 )
 COREG_DWI_MASK_KWARGS = dict(
     datatype="dwi",
@@ -79,5 +79,5 @@ COREG_DWI_MASK_KWARGS = dict(
     desc="brain",
     space="T1w",
     compress=None,
-    dismiss_entities=["direction"],
+    # dismiss_entities=["direction"],
 )
