@@ -25,27 +25,20 @@ from pathlib import Path
 
 from dmriprep import config
 from dmriprep.interfaces import DerivativesDataSink
-from dmriprep.workflows.dwi_mrtrix.pipelines.apply_transform.apply_transform import (
-    init_apply_transform,
-)
-from dmriprep.workflows.dwi_mrtrix.pipelines.conversions.nii_conversions.conversion import (
-    init_nii_conversion_wf,
-)
-from dmriprep.workflows.dwi_mrtrix.pipelines.derivatives.derivatives import (
-    init_derivatives_wf,
-)
-from dmriprep.workflows.dwi_mrtrix.pipelines.epi_ref.epi_ref import (
-    init_epi_ref_wf,
-)
-from dmriprep.workflows.dwi_mrtrix.pipelines.epi_reg.epi_reg import (
-    init_epireg_wf,
-)
-from dmriprep.workflows.dwi_mrtrix.pipelines.pre_sdc.pre_sdc import (
-    init_phasediff_wf,
-)
-from dmriprep.workflows.dwi_mrtrix.pipelines.preprocess.preprocess import (
-    init_preprocess_wf,
-)
+from dmriprep.workflows.dwi_mrtrix.pipelines.apply_transform.apply_transform import \
+    init_apply_transform
+from dmriprep.workflows.dwi_mrtrix.pipelines.conversions.nii_conversions.conversion import \
+    init_nii_conversion_wf
+from dmriprep.workflows.dwi_mrtrix.pipelines.derivatives.derivatives import \
+    init_derivatives_wf
+from dmriprep.workflows.dwi_mrtrix.pipelines.epi_ref.epi_ref import \
+    init_epi_ref_wf
+from dmriprep.workflows.dwi_mrtrix.pipelines.epi_reg.epi_reg import \
+    init_epireg_wf
+from dmriprep.workflows.dwi_mrtrix.pipelines.pre_sdc.pre_sdc import \
+    init_phasediff_wf
+from dmriprep.workflows.dwi_mrtrix.pipelines.preprocess.preprocess import \
+    init_preprocess_wf
 from nipype.interfaces import utility as niu
 from nipype.pipeline import engine as pe
 from niworkflows.engine.workflows import LiterateWorkflow as Workflow
@@ -109,14 +102,12 @@ def init_dwi_preproc_wf(dwi_file):
     * :py:func:`~dmriprep.workflows.dwi.outputs.init_reportlets_wf`
 
     """
-    from dmriprep.workflows.dwi_mrtrix.pipelines.conversions import (
-        init_mif_conversion_wf,
-    )
+    from dmriprep.workflows.dwi_mrtrix.pipelines.conversions import \
+        init_mif_conversion_wf
     from dmriprep.workflows.dwi_mrtrix.utils.bids import locate_associated_file
     from niworkflows.interfaces.nibabel import ApplyMask
-    from niworkflows.interfaces.reportlets.registration import (
-        SimpleBeforeAfterRPT as SimpleBeforeAfter,
-    )
+    from niworkflows.interfaces.reportlets.registration import \
+        SimpleBeforeAfterRPT as SimpleBeforeAfter
     from niworkflows.workflows.epi.refmap import init_epi_reference_wf
     from sdcflows.workflows.ancillary import init_brainextraction_wf
 
@@ -267,12 +258,6 @@ def init_dwi_preproc_wf(dwi_file):
                         (("subject_id", _prefix), "inputnode.subject_id"),
                         ("subjects_dir", "inputnode.subjects_dir"),
                     ],
-                ),
-                # T1w Mask
-                (
-                    inputnode,
-                    t1w_brain,
-                    [("t1w_preproc", "in_file"), ("t1w_mask", "in_mask")],
                 ),
             ]
             # (inputnode, ds_report_reg, [("dwi_file", "source_file")]),
