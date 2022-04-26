@@ -364,14 +364,6 @@ and a *b=0* average for reference to the subsequent steps of preprocessing was c
         dwi_preproc_wf = init_dwi_preproc_wf(
             dwi_file,
         )
-        workflow.base_dir = f"{config.execution.work_dir}/dmriprep_wf"
-        workflow.config["execution"]["crashdump_dir"] = str(
-            config.execution.output_dir
-            / "dmriprep"
-            / f"sub-{subject_id}"
-            / "log"
-            / config.execution.run_uuid
-        )
         # fmt: off
         workflow.connect([
             (anat_preproc_wf, dwi_preproc_wf, [
@@ -393,8 +385,8 @@ and a *b=0* average for reference to the subsequent steps of preprocessing was c
         ])
         # fmt: on
         # Keep a handle to each workflow
-        workflow.run()
-        # dwi_preproc_list.append(dwi_preproc_wf)
+        # workflow.run()
+        dwi_preproc_list.append(dwi_preproc_wf)
         # del dwi_preproc_wf
 
     # if not fmap_estimators:
