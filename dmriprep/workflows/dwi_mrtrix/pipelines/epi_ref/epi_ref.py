@@ -1,4 +1,3 @@
-import nipype.pipeline.engine as pe
 from dmriprep.workflows.dwi_mrtrix.pipelines.epi_ref.edges import (
     CONVERSION_TO_OUTPUT_EDGES,
     DWIEXTRACT_TO_MRMATH_EDGES,
@@ -13,6 +12,7 @@ from dmriprep.workflows.dwi_mrtrix.pipelines.epi_ref.nodes import (
     MRMATH_NODE,
     OUTPUT_NODE,
 )
+from niworkflows.engine.workflows import LiterateWorkflow as Workflow
 
 EPI_REF = [
     (INPUT_NODE, DWIEXTRACT_NODE, INPUT_TO_DWIEXTRACT_EDGES),
@@ -23,7 +23,7 @@ EPI_REF = [
 ]
 
 
-def init_epi_ref_wf(name: str = "epi_reference_wf") -> pe.Workflow:
+def init_epi_ref_wf(name: str = "epi_reference_wf") -> Workflow:
     """
     Initiate a workflow for generation of EPI referance image
 
@@ -37,6 +37,6 @@ def init_epi_ref_wf(name: str = "epi_reference_wf") -> pe.Workflow:
     pe.Workflow
         Initiated workflow
     """
-    wf = pe.Workflow(name=name)
+    wf = Workflow(name=name)
     wf.connect(EPI_REF)
     return wf

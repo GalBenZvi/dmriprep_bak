@@ -11,6 +11,7 @@ from dmriprep.workflows.dwi_mrtrix.pipelines.epi_ref.configurations import (
 )
 from nipype.interfaces import mrtrix3 as mrt
 from nipype.interfaces import utility as niu
+from niworkflows.engine.workflows import LiterateWorkflow as Workflow
 
 #: i/o
 INPUT_NODE = pe.Node(

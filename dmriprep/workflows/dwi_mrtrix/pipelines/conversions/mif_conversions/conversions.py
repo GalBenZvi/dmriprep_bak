@@ -1,4 +1,3 @@
-import nipype.pipeline.engine as pe
 from dmriprep.workflows.dwi_mrtrix.pipelines.conversions.mif_conversions.edges import (
     MIF_DWI_CONVERSION_TO_OUTPUT_EDGES,
     MIF_FMAP_CONVERSION_TO_OUTPUT_EDGES,
@@ -11,6 +10,8 @@ from dmriprep.workflows.dwi_mrtrix.pipelines.conversions.mif_conversions.nodes i
     MIF_INPUT_NODE,
     MIF_OUTPUT_NODE,
 )
+from niworkflows.engine.workflows import LiterateWorkflow as Workflow
+from niworkflows.engine.workflows import LiterateWorkflow as Workflowmport
 from traits.trait_base import _Undefined
 
 #: Conversion from NIfTI to .mif format.
@@ -38,7 +39,7 @@ MIF_DWI_CONVERSION = [
 ]
 
 
-def init_mif_conversion_wf(name: str = "mif_conversion_wf") -> pe.Workflow:
+def init_mif_conversion_wf(name: str = "mif_conversion_wf") -> Workflow:
     """
     Initiate a workflow to convert input files to mif format for better compatability with *mrtrix3* functions
 
@@ -52,6 +53,6 @@ def init_mif_conversion_wf(name: str = "mif_conversion_wf") -> pe.Workflow:
     pe.Workflow
         A mif conversion workflow
     """
-    wf = pe.Workflow(name=name)
+    wf = Workflow(name=name)
     wf.connect(MIF_DWI_CONVERSION)
     return wf

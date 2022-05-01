@@ -16,6 +16,7 @@ from dmriprep.workflows.dwi_mrtrix.pipelines.pre_sdc.nodes import (
     MRMATH_NODE,
     OUTPUT_NODE,
 )
+from niworkflows.engine.workflows import LiterateWorkflow as Workflow
 
 PHASEDIFF = [
     (INPUT_NODE, MERGE_NODE, INPUT_TO_MERGE_EDGES),
@@ -28,7 +29,7 @@ PHASEDIFF = [
 ]
 
 
-def init_phasediff_wf(name="phasediff_prep_wf") -> pe.Workflow:
+def init_phasediff_wf(name="phasediff_prep_wf") -> Workflow:
     """
     Initiates the preperation for SDC workflow.
 
@@ -42,16 +43,16 @@ def init_phasediff_wf(name="phasediff_prep_wf") -> pe.Workflow:
     pe.Workflow
         Initiated workflow for phasediff preperation for SDC.
     """
-    wf = pe.Workflow(name=name)
+    wf = Workflow(name=name)
     wf.connect(PHASEDIFF)
     return wf
 
 
 def add_fieldmaps_to_wf(
     inputnode: pe.Node,
-    conversion_wf: pe.Workflow,
-    epi_ref_wf: pe.Workflow,
-    phasediff_wf: pe.Workflow,
+    conversion_wf: Workflow,
+    epi_ref_wf: Workflow,
+    phasediff_wf: Workflow,
 ) -> list:
     """
     Adds the correct combination of SBRef/mean B0 images for SDC to the main workflow.

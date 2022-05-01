@@ -12,7 +12,7 @@ from dmriprep.workflows.dwi_mrtrix.pipelines.epi_reg.nodes import (
 )
 from nipype.interfaces import fsl
 from nipype.interfaces import utility as niu
-from nipype.pipeline import engine as pe
+from niworkflows.engine.workflows import LiterateWorkflow as Workflow
 
 EPI_REG = [
     (INPUT_NODE, EPIREG_NODE, INPUT_TO_EPIREG_EDGES),
@@ -24,7 +24,7 @@ EPI_REG = [
 
 def init_epireg_wf(
     name="epi_reg_wf",
-) -> pe.Workflow:
+) -> Workflow:
     """
     Initiates a FSL's epi_reg-based workflow to coregister EPI images to structural ones.
 
@@ -38,6 +38,6 @@ def init_epireg_wf(
     pe.Workflow
         An initiated workflow for coregistering EPI images to structural ones.
     """
-    wf = pe.Workflow(name=name)
+    wf = Workflow(name=name)
     wf.connect(EPI_REG)
     return wf

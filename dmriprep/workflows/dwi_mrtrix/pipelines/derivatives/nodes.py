@@ -14,6 +14,7 @@ from dmriprep.workflows.dwi_mrtrix.pipelines.derivatives.configurations import (
     T1_to_EPI_AFF_KWARGS,
 )
 from nipype.interfaces import utility as niu
+from niworkflows.engine.workflows import LiterateWorkflow as Workflow
 
 
 def infer_metric(in_file: str) -> str:

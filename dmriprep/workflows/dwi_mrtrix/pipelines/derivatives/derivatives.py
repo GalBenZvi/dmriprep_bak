@@ -1,4 +1,3 @@
-import nipype.pipeline.engine as pe
 from dmriprep.workflows.dwi_mrtrix.pipelines.derivatives.edges import (
     COREG_DWI_LIST_TO_DDS_EDGES,
     COREG_SBREF_LIST_TO_DDS_EDGES,
@@ -32,6 +31,8 @@ from dmriprep.workflows.dwi_mrtrix.pipelines.derivatives.nodes import (
     NATIVE_SBREF_LIST_NODE,
     T1_TO_EPI_NODE,
 )
+from niworkflows.engine.workflows import LiterateWorkflow as Workflow
+from niworkflows.engine.workflows import LiterateWorkflow as Workflowmport
 
 DERIVATIVES_DS = [
     #: Native DWI
@@ -63,7 +64,7 @@ DERIVATIVES_DS = [
 ]
 
 
-def init_derivatives_wf(name="dmri_derivatives_wf") -> pe.Workflow:
+def init_derivatives_wf(name="dmri_derivatives_wf") -> Workflow:
     """
     Initiates a workflow comprised of a battery of DerivativesDataSinks to store output files in their correct locations.
 
@@ -77,6 +78,6 @@ def init_derivatives_wf(name="dmri_derivatives_wf") -> pe.Workflow:
     pe.Workflow
         An initiated workflow for storing output files in their correct locations.
     """
-    wf = pe.Workflow(name=name)
+    wf = Workflow(name=name)
     wf.connect(DERIVATIVES_DS)
     return wf

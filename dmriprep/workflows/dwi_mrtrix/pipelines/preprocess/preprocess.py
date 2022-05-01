@@ -1,4 +1,3 @@
-import nipype.pipeline.engine as pe
 from dmriprep.workflows.dwi_mrtrix.pipelines.preprocess.edges import (
     BIASCORRECT_TO_OUTPUT_EDGES,
     DENOISE_TO_DWIPREPROC_EDGES,
@@ -16,6 +15,7 @@ from dmriprep.workflows.dwi_mrtrix.pipelines.preprocess.nodes import (
     INPUT_NODE,
     OUTPUT_NODE,
 )
+from niworkflows.engine.workflows import LiterateWorkflow as Workflow
 
 PREPROCESSING = [
     (INPUT_NODE, DENOISE_NODE, INPUT_TO_DENOISE_EDGES),
@@ -28,7 +28,7 @@ PREPROCESSING = [
 ]
 
 
-def init_preprocess_wf(name="preprocess_wf") -> pe.Workflow:
+def init_preprocess_wf(name="preprocess_wf") -> Workflow:
     """
     Initiates a preprocessing workflow.
 
@@ -43,6 +43,6 @@ def init_preprocess_wf(name="preprocess_wf") -> pe.Workflow:
         Initiated workflow for preprocessing.
     """
 
-    wf = pe.Workflow(name=name)
+    wf = Workflow(name=name)
     wf.connect(PREPROCESSING)
     return wf

@@ -16,7 +16,7 @@ from dmriprep.workflows.dwi_mrtrix.pipelines.apply_transform.nodes import (
     RESAMPLE_MASK_NODE,
     TRANSFORM_FSL_AFF_TO_MRTRIX,
 )
-from nipype.pipeline import engine as pe
+from niworkflows.engine.workflows import LiterateWorkflow as Workflow
 
 APPLY_TRANSFORMS = [
     (
@@ -38,7 +38,7 @@ APPLY_TRANSFORMS = [
 ]
 
 
-def init_apply_transform(name="apply_transform_wf") -> pe.Workflow:
+def init_apply_transform(name="apply_transform_wf") -> Workflow:
     """
     Initiates a workflow to apply pre-calculated (linear,rigid-body) transform to a list of files.
 
@@ -54,6 +54,6 @@ def init_apply_transform(name="apply_transform_wf") -> pe.Workflow:
     pe.Workflow
         Initiated workflow to apply pre-calculated transform on several files.
     """
-    wf = pe.Workflow(name=name)
+    wf = Workflow(name=name)
     wf.connect(APPLY_TRANSFORMS)
     return wf

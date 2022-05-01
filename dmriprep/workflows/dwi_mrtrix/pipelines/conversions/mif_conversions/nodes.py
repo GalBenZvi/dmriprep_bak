@@ -12,6 +12,7 @@ from dmriprep.workflows.dwi_mrtrix.pipelines.conversions.mif_conversions.configu
 )
 from nipype.interfaces import mrtrix3 as mrt
 from nipype.interfaces import utility as niu
+from niworkflows.engine.workflows import LiterateWorkflow as Workflowmport
 
 MIF_INPUT_NODE = pe.Node(
     niu.IdentityInterface(fields=MIF_INPUTNODE_FIELDS),

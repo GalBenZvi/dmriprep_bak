@@ -13,6 +13,7 @@ from dmriprep.workflows.dwi_mrtrix.pipelines.apply_transform.configurations impo
 from nipype.interfaces import ants, fsl
 from nipype.interfaces import mrtrix3 as mrt
 from nipype.interfaces import utility as niu
+from niworkflows.engine.workflows import LiterateWorkflow as Workflow
 
 #: i/o
 INPUT_NODE = pe.Node(
